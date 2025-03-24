@@ -68,16 +68,17 @@ class DataManager:
         self.X_train = self.train_df.drop("loan_status", axis=1).values
         self.y_train = self.train_df["loan_status"].values
 
-        self.scaler = StandardScaler()
-        self.X_train_scaled = self.scaler.fit_transform(self.X_train)
-
     def split_data(self):
         self.X_train, self.X_val, self.y_train, self.y_val = train_test_split(
-            self.X_train_scaled,
+            self.X_train,
             self.y_train,
             test_size=self.config.get("test_size", 0.2),
             random_state=42,
         )
+
+        self.scaler = StandardScaler()
+        self.X_train = self.scaler.fit_transform(self.X_train)
+        self.X_val = self.scaler.transform(self.X_val)
 
     def get_datasets(self):
         return (
